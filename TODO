@@ -1,0 +1,67 @@
+#!/bin/bash
+
+FLAG=$1
+TASK=$2
+DUE_TIME=$3
+
+function addTask {
+    if [[ $DUE_TIME == "" ]]; then
+        echo "$TASK" >> "$TASK_FILE"
+    else
+        echo "$TASK : $DUE_TIME" >> "$TASK_FILE"
+    fi
+}
+
+function removeTask {
+    if [ -s "$TASK_FILE" ]; then
+        echo -n "[*] Which task do you want to remove? "
+        read -r TASK_REM
+        sed -i "${TASK_REM}d" "$TASK_FILE"
+    else
+        echo "[*] No tasks to remove"
+    fi
+
+}
+
+function listTasks {
+    if [ -s "$TASK_FILE" ]; then
+        cat "$TASK_FILE"
+    else
+        echo "[*] No tasks to list"
+    fi
+}
+
+function main {
+    if [ -d "$HOME/TODO" ] && [ -f "$HOME/TODO/todo.txt" ]; then
+        TASK_FILE=$HOME/TODO/todo.txt
+        case $FLAG in
+            -a|--add)
+                addTask 
+                ;;
+            -r|--remove)
+                listTasks
+                removeTask
+                ;;
+            -l|--list)
+                listTasks
+                ;;
+            -h|--help)
+                echo "Usage: [flag] [task] [due time (optional)]"
+                echo " -h | --help: Show this help"
+                echo " -a | --add: Add a task"
+                echo " -r | --remove: Remove a task"
+                echo " -l | --list: List all tasks"
+                ;;
+            *)
+                echo "[x] Invalid flag"
+                ;;
+        esac
+    else
+        echo "[x] Creating ~/TODO and todo.txt"
+        echo "[>} Run this script again for it to work"
+        mkdir "$HOME/TODO"
+        touch "$HOME/TODO/todo.txt"
+    fi
+}
+
+main
