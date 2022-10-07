@@ -58,7 +58,7 @@ function main {
         esac
     else
         echo "[x] Creating ~/TODO and todo.txt"
-        echo "[>} Run this script again for it to work"
+        echo "[>] Run this script again for it to work"
         mkdir "$HOME/TODO"
         touch "$HOME/TODO/todo.txt"
     fi
